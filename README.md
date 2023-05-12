@@ -1,16 +1,8 @@
-# battery_app
+# Platform Channels - Battery App
 
-A new Flutter project.
+This project was made for the purpose of presenting it in a brownbag to tackle Platform Channels in Flutter. 
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Flutter used for this is 3.10.
+- Make sure to either have at least the Flutter 3.10 in your local files, or better to download it using FVM.
