@@ -13,13 +13,12 @@ import Flutter
     batteryChannel.setMethodCallHandler({
       [weak self] (call: FlutterMethodCall, result: FlutterResult) -> Void in
       // This method is invoked on the UI thread.
-      guard call.method == "getBatteryDetails" else {
-        result(FlutterMethodNotImplemented)
-        return
-      } 
-
+    
       if (call.method == "getBatteryDetails") {
         self?.getBatteryDetails(result: result)
+      } else {
+        // If a method that is not getBatteryDetails is called, return error
+        result(FlutterMethodNotImplemented)
       }
     })
 
@@ -46,9 +45,8 @@ import Flutter
         default:
           status = "Battery status unavailable"
       }    
-
+      // send back battery details result
       result(["level": Int(device.batteryLevel * 100), "status": status])
-
     }
   }
    

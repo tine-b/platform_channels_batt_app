@@ -12,8 +12,9 @@ class CircularPercentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme.apply(displayColor: Theme.of(context).colorScheme.onSurface);
-
+    final textTheme = Theme.of(context)
+        .textTheme
+        .apply(displayColor: Theme.of(context).colorScheme.onSurface);
     return Container(
       margin: const EdgeInsets.only(top: 45),
       height: MediaQuery.of(context).size.width / 1.4,
@@ -40,7 +41,8 @@ class CircularPercentWidget extends StatelessWidget {
         center: batteryLevel != 0
             ? Text(
                 '$batteryLevel%',
-                style: textTheme.displayMedium!.copyWith(fontWeight: FontWeight.bold),
+                style: textTheme.displayMedium!
+                    .copyWith(fontWeight: FontWeight.bold),
               )
             : const Icon(
                 size: 60,

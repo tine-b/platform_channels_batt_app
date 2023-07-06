@@ -21,14 +21,19 @@ class MainActivity: FlutterActivity() {
         // This method is invoked on the main thread.
         call, result ->
         if (call.method == "getBatteryDetails") {
-          val batteryDetails = getBatteryDetails()
+          
+          val batteryDetails = getBatteryDetails() // The function returns a hashmap
   
-          if (batteryDetails.size > 0) {
+          // This checks if HashMap has any values in it, if yes, proceed with sending result
+          if (batteryDetails.size > 0) { 
+            // Send back battery details result
             result.success(batteryDetails)
           } else {
+            // If no data is available, send back unavailable battery status
             result.error("UNAVAILABLE", "Battery status unavailable", null)
           }
         } else {
+          // If a method that is not getBatteryDetails is called, return error
           result.notImplemented()
         }
       }
@@ -40,6 +45,9 @@ class MainActivity: FlutterActivity() {
     val batteryLevel: Int
     val batteryState: String 
 
+    // These conditions are used to setup the fetching of battery details which
+    // differs between newer and older Android versions, but basically they
+    // still do the same thing
     if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
       val batteryManager = getSystemService(Context.BATTERY_SERVICE) as BatteryManager
       batteryLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
@@ -54,7 +62,7 @@ class MainActivity: FlutterActivity() {
         else -> batteryState = "Battery status unavailable"
       }
 
-      resultData.put("level", batteryLevel)  
+      resultData.put("level", batteryLevel)
       resultData.put("status", batteryState)    
     } else {
       val intent = ContextWrapper(applicationContext).registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
@@ -72,7 +80,7 @@ class MainActivity: FlutterActivity() {
       resultData.put("level", batteryLevel)  
       resultData.put("status", batteryState) 
     }
-    return resultData
+    return resultData // return HashMap with `level` and `status` data in them
   }
 
 }

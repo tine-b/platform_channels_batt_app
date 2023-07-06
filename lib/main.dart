@@ -30,15 +30,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -46,17 +37,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  //* The setup for the Method Channel
+  //* Should be the same in AppDelegate.swift & MainActivity.kt
   static const platform = MethodChannel('batteryMethodChannel');
-  // Get battery level.
-  String _message = '';
-  String _batteryState = '';
-  int _batteryLevel = 0;
-  bool _hasData = false;
+
+  String _batteryState = ''; //* Stores battery infromation
+  int _batteryLevel = 0; //* Stores battery percentage
+  bool _hasData = false; //* Used for empty state screen
+  String _message = ''; //* Used for error message handling
 
   @override
   void initState() {
     super.initState();
-    _hasData = false;
+    _hasData = false; //* Initial state is an empty state
   }
 
   @override
@@ -65,22 +58,28 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Scaffold(
         backgroundColor: AppColors.lightBeige,
         appBar: AppBar(
-          title: Text(widget.title, style: const TextStyle(color: Colors.white)),
+          title: Text(
+            widget.title,
+            style: const TextStyle(color: Colors.white),
+          ),
           backgroundColor: AppColors.blueGreen,
           centerTitle: true,
         ),
         body: Column(
           children: [
+            //* Circular Percent Widget - contains battery percentage
             CircularPercentWidget(batteryLevel: _batteryLevel),
+            //* BatteryWidget - contains battery details
             BatteryWidget(
               hasData: _hasData,
               batteryLevel: _batteryLevel,
               batteryState: _batteryState,
               message: _message,
             ),
+            //* Battery Buttons - contains button for fetching and resetting data
             BatteryButtons(
               batteryState: _batteryState,
-              getBatteryLevel: _getBatteryLevel,
+              getBatteryLevel: _getBatteryDetails,
               clearDetails: _clearDetails,
             ),
           ],
@@ -89,19 +88,27 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  FutureOr<void> _getBatteryLevel() async {
+  //* Fetching of battery details using Platform Channels
+  FutureOr<void> _getBatteryDetails() async {
     try {
-      final Map<dynamic, dynamic>? result = await platform.invokeMethod('getBatteryDetails');
+      //* Map in Dart
+      //* Dictionary is the expected result from Swift
+      //* HashMap is the expected result from Kotlin
+      //* Method name should be the same in AppDelegate.swift & MainActivity.kt
+      final Map<dynamic, dynamic>? result =
+          await platform.invokeMethod('getBatteryDetails');
       _batteryLevel = result?['level'] ?? 0;
       _batteryState = result?['status'].toString() ?? '';
       _message = '';
       setState(() => _hasData = true);
     } on PlatformException catch (e) {
+      //* Assign error message in message to battery details portion of app
       _message = '${e.message}';
       setState(() => _hasData = false);
     }
   }
 
+  //* Clearing of all data for empty state
   void _clearDetails() async {
     setState(() {
       _batteryLevel = 0;
